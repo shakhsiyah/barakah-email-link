@@ -1,35 +1,60 @@
-<script>
-  (function () {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const listId = params.get('listId');
-    const boardId = params.get('boardId');
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Open invite</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Roboto, sans-serif; margin: 0; padding: 24px; text-align: center; }
+    .btn { display:inline-block; padding:12px 18px; border-radius:8px; background:#007aff; color:white; text-decoration:none; margin-top:12px; font-size:16px; }
+    .muted { color: #6b7280; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Opening Barakah Planner...</h1>
+  <p id="desc">Preparing to open the app...</p>
+  <div id="fallback" style="display:none;">
+    <p class="muted">If the app didn't open automatically, tap below:</p>
+    <a id="openAppBtn" class="btn">Open in app</a>
+    <p class="muted">Or install from the store:</p>
+    <p>
+      <a href="https://apps.apple.com/">App Store</a> | <a href="https://play.google.com/store">Google Play</a>
+    </p>
+  </div>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const listId = params.get('listId');
+      const boardId = params.get('boardId');
 
-    let schemeLink = null;
+      let schemeLink = null;
 
-    if (code) {
-      schemeLink = 'hasnat://invite?code=' + encodeURIComponent(code);
-    } else if (boardId) {
-      schemeLink = 'hasnat://?boardId=' + encodeURIComponent(boardId) + '&type=board';
-    } else if (listId) {
-      schemeLink = 'hasnat://?listId=' + encodeURIComponent(listId) + '&type=list';
-    } else {
-      document.getElementById('desc').innerText = 'Invalid invite link.';
-      return;
-    }
+      if (code) {
+        schemeLink = 'hasnat://invite?code=' + encodeURIComponent(code);
+      } else if (boardId) {
+        schemeLink = 'hasnat://?boardId=' + encodeURIComponent(boardId) + '&type=board';
+      } else if (listId) {
+        schemeLink = 'hasnat://?listId=' + encodeURIComponent(listId) + '&type=list';
+      } else {
+        document.getElementById('desc').innerText = 'Invalid invite link.';
+        return;
+      }
 
-    document.getElementById('openAppBtn').href = schemeLink;
+      document.getElementById('openAppBtn').href = schemeLink;
 
-    // Use hidden anchor click instead of window.location.href — works in Safari/Gmail web view
-    const a = document.createElement('a');
-    a.href = schemeLink;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+      // Use hidden anchor click — works better in Safari/Gmail web view
+      const a = document.createElement('a');
+      a.href = schemeLink;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
 
-    setTimeout(function () {
-      document.getElementById('fallback').style.display = 'block';
-      document.getElementById('desc').innerText = 'Tap the button to open the app, or install it from the store.';
-    }, 800);
-  })();
-</script>
+      setTimeout(function () {
+        document.getElementById('fallback').style.display = 'block';
+        document.getElementById('desc').innerText = 'Tap the button to open the app, or install it from the store.';
+      }, 800);
+    })();
+  </script>
+</body>
+</html>
